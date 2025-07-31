@@ -78,11 +78,7 @@ The core logic resides in the `src/` directory, organized as follows:
     ```bash
     npm install
     ```
-2.  **Build the TypeScript Project**:
-    ```bash
-    npm run build
-    ```
-3.  **Start the Server**:
+2.  **Start the Server**:
     ```bash
     npm start
     ```
