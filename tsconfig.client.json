@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "es2020",
+    "moduleResolution": "node",
+    "outDir": "./public/js",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2016", "dom"],
+    "types": ["node"],
+    "declaration": false,
+    "sourceMap": true
+  },
+  "include": [
+    "src/main.ts",
+    "src/WatchApp.ts",
+    "src/renderer/WatchRenderer.ts",
+    "src/engine/WatchEngine.ts",
+    "src/types/d.types.ts",
+    "src/util/WatchLogger.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "public"
+  ]
+}

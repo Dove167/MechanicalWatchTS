@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanical Watch Simulator v2.0</title>
+    <link rel="stylesheet" href="/css/modern-watch.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">
+                    <span class="title-icon">🕰️</span>
+                    Mechanical Watch Simulator
+                    <span class="version">v2.0</span>
+                </h1>
+                <div class="header-status">
+                    <div class="status-item">
+                        <span class="status-label">Status:</span>
+                        <span id="watch-status" class="status stopped">🔴 Stopped</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Time:</span>
+                        <span id="current-time" class="time-display">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Watch Display Section -->
+            <section class="watch-section">
+                <div class="watch-container">
+                    <canvas id="watch-canvas" class="watch-canvas"></canvas>
+                    
+                    <!-- Watch Controls -->
+                    <div class="watch-controls">
+                        <div class="control-group primary">
+                            <button id="start-btn" class="control-btn start">
+                                <span class="btn-icon">⚡</span>
+                                Start
+                            </button>
+                            <button id="stop-btn" class="control-btn stop">
+                                <span class="btn-icon">⏹️</span>
+                                Stop
+                            </button>
+                            <button id="wind-btn" class="control-btn wind">
+                                <span class="btn-icon">🔄</span>
+                                Wind
+                            </button>
+                        </div>
+                        
+                        <div class="control-group secondary">
+                            <button id="movement-toggle" class="control-btn toggle">
+                                <span class="btn-icon">⚙️</span>
+                                Show Movement
+                            </button>
+                            <button id="shock-btn" class="control-btn shock">
+                                <span class="btn-icon">💥</span>
+                                Shock Test
+                            </button>
+                            <button id="service-btn" class="control-btn service">
+                                <span class="btn-icon">🔧</span>
+                                Service
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Power Reserve Display -->
+                <div class="power-display">
+                    <h3 class="power-title">⚡ Power Reserve</h3>
+                    <div class="power-container">
+                        <div class="power-bar-container">
+                            <div id="power-bar" class="power-bar high"></div>
+                        </div>
+                        <span id="power-reserve" class="power-value">42h 0m</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Movement Panel -->
+            <section id="movement-panel" class="movement-panel hidden">
+                <div class="panel-header">
+                    <h2 class="panel-title">⚙️ Movement Details</h2>
+                    <div class="movement-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">Beat Rate:</span>
+                            <span id="beat-rate" class="spec-value">28,800 BPH</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Accuracy:</span>
+                            <span id="accuracy" class="spec-value">+0.0 sec/day</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="movement-content">
+                    <!-- Component List -->
+                    <div class="component-section">
+                        <h3 class="section-title">🔧 Components</h3>
+                        <div id="component-list" class="component-list">
+                            <!-- Components will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Component Details -->
+                    <div class="details-section">
+                        <h3 class="section-title">🔍 Component Details</h3>
+                        <div id="component-details" class="component-details">
+                            <p>Select a component to view details</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Statistics Panel -->
+            <section class="stats-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">📊 Statistics</h2>
+                    <div class="stats-actions">
+                        <button id="export-btn" class="action-btn">
+                            <span class="btn-icon">📤</span>
+                            Export
+                        </button>
+                        <button id="reset-btn" class="action-btn danger">
+                            <span class="btn-icon">🔄</span>
+                            Reset
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Runtime</div>
+                            <div id="runtime" class="stat-value">0h 0m</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">🔧</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Components</div>
+                            <div id="component-count" class="stat-value">6/6</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">💎</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Health</div>
+                            <div id="avg-health" class="stat-value">98.5%</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Efficiency</div>
+                            <div id="efficiency" class="stat-value">94.2%</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>&copy; 2024 Mechanical Watch Simulator - Built with TypeScript & Canvas</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Documentation</a>
+                    <a href="#" class="footer-link">GitHub</a>
+                    <a href="#" class="footer-link">Support</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alert-container" class="alert-container"></div>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Minimal client without TS imports; uses Socket.IO events + REST controls
+        (function() {
+            const $ = (id) => document.getElementById(id);
+
+            // Elements
+            const statusEl = $('watch-status');
+            const timeEl = $('current-time');
+            const powerBar = $('power-bar');
+            const powerText = $('power-reserve');
+            const beatRateEl = $('beat-rate');
+            const accuracyEl = $('accuracy');
+            const componentList = $('component-list');
+            const componentDetails = $('component-details');
+            const runtimeEl = $('runtime');
+            const compCountEl = $('component-count');
+            const avgHealthEl = $('avg-health');
+            const efficiencyEl = $('efficiency');
+            const movementPanel = $('movement-panel');
+
+            // Buttons
+            const startBtn = $('start-btn');
+            const stopBtn = $('stop-btn');
+            const windBtn = $('wind-btn');
+            const shockBtn = $('shock-btn');
+            const serviceBtn = $('service-btn');
+            const resetBtn = $('reset-btn');
+            const movementToggle = $('movement-toggle');
+
+            // Socket
+            const socket = io();
+
+            // Draw minimal analog watch to canvas
+            const canvas = document.getElementById('watch-canvas');
+            const ctx = canvas.getContext('2d');
+            function resizeCanvas() {
+                const rect = canvas.getBoundingClientRect();
+                const size = Math.min(rect.width || 400, 500);
+                canvas.width = size;
+                canvas.height = size;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            function drawWatch(state) {
+                if (!ctx) return;
+                const w = canvas.width, h = canvas.height;
+                const cx = w / 2, cy = h / 2;
+                const r = Math.min(cx, cy) - 10;
+
+                ctx.clearRect(0, 0, w, h);
+
+                // Face
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.fillStyle = '#11161b';
+                ctx.fill();
+                ctx.lineWidth = 4;
+                ctx.strokeStyle = '#2b3440';
+                ctx.stroke();
+
+                // Hour marks
+                ctx.save();
+                ctx.translate(cx, cy);
+                for (let i = 0; i < 12; i++) {
+                    ctx.rotate(Math.PI / 6);
+                    ctx.beginPath();
+                    ctx.moveTo(0, -r + 12);
+                    ctx.lineTo(0, -r + 28);
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = '#cbd5e1';
+                    ctx.stroke();
+                }
+                ctx.restore();
+
+                // Time
+                const now = state?.now ? new Date(state.now) : new Date();
+                const s = now.getSeconds();
+                const m = now.getMinutes() + s / 60;
+                const hhh = ((now.getHours() % 12) + m / 60);
+
+                // Angles
+                const angS = (Math.PI * 2) * (s / 60) - Math.PI / 2;
+                const angM = (Math.PI * 2) * (m / 60) - Math.PI / 2;
+                const angH = (Math.PI * 2) * (hhh / 12) - Math.PI / 2;
+
+                // Hands
+                function hand(angle, length, width, color) {
+                    ctx.beginPath();
+                    ctx.lineWidth = width;
+                    ctx.lineCap = 'round';
+                    ctx.strokeStyle = color;
+                    ctx.moveTo(cx, cy);
+                    ctx.lineTo(cx + Math.cos(angle) * length, cy + Math.sin(angle) * length);
+                    ctx.stroke();
+                }
+
+                hand(angH, r * 0.5, 6, '#e2e8f0');
+                hand(angM, r * 0.75, 4, '#94a3b8');
+
+                // Second hand
+                ctx.beginPath();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#f43f5e';
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + Math.cos(angS) * (r * 0.85), cy + Math.sin(angS) * (r * 0.85));
+                ctx.stroke();
+
+                // Center
+                ctx.beginPath();
+                ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#f43f5e';
+                ctx.fill();
+            }
+
+            function setStatus(isRunning) {
+                statusEl.textContent = isRunning ? '🟢 Running' : '🔴 Stopped';
+                statusEl.classList.toggle('running', !!isRunning);
+                statusEl.classList.toggle('stopped', !isRunning);
+            }
+
+            function fmtTime(dateISO) {
+                const d = dateISO ? new Date(dateISO) : new Date();
+                const pad = (n) => n.toString().padStart(2, '0');
+                return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+            }
+
+            function updatePower(seconds) {
+                // seconds of reserve; show hours/minutes approximation
+                const h = Math.floor(seconds / 3600);
+                const m = Math.floor((seconds % 3600) / 60);
+                powerText.textContent = `${h}h ${m}m`;
+                const pct = Math.max(0, Math.min(100, Math.round((seconds / (48 * 3600)) * 100)));
+                powerBar.style.width = pct + '%';
+                powerBar.classList.toggle('low', pct < 20);
+                powerBar.classList.toggle('medium', pct >= 20 && pct < 60);
+                powerBar.classList.toggle('high', pct >= 60);
+            }
+
+            function updateComponents(components) {
+                if (!Array.isArray(components)) return;
+                componentList.innerHTML = '';
+                let healthy = 0;
+                components.forEach((c, idx) => {
+                    const item = document.createElement('button');
+                    item.className = 'component-item';
+                    item.innerHTML = `
+                        <span class="comp-name">${c.name || ('Component ' + (idx + 1))}</span>
+                        <span class="comp-health">${Math.round(c.health ?? 100)}%</span>
+                    `;
+                    item.addEventListener('click', () => {
+                        componentDetails.innerHTML = `
+                            <div class="detail-row"><span>name</span><span>${c.name ?? '-'}</span></div>
+                            <div class="detail-row"><span>status</span><span>${c.status ?? '-'}</span></div>
+                            <div class="detail-row"><span>health</span><span>${Math.round(c.health ?? 0)}%</span></div>
+                            <div class="detail-row"><span>friction</span><span>${(c.friction ?? 0).toFixed(3)}</span></div>
+                            <div class="detail-row"><span>load</span><span>${(c.load ?? 0).toFixed(3)}</span></div>
+                        `;
+                    });
+                    componentList.appendChild(item);
+                    if ((c.health ?? 0) > 80) healthy++;
+                });
+                compCountEl.textContent = `${components.length}/${components.length}`;
+                avgHealthEl.textContent = components.length ? `${Math.round(components.reduce((a, c) => a + (c.health ?? 0), 0) / components.length)}%` : '0%';
+                efficiencyEl.textContent = components.length ? `${Math.round((healthy / components.length) * 100)}%` : '0%';
+            }
+
+            function updateStats(state) {
+                // runtime simple: if running, increment; otherwise keep last
+                if (!updateStats._start) updateStats._start = Date.now();
+                const elapsedMs = Date.now() - updateStats._start;
+                const minutes = Math.floor(elapsedMs / 60000);
+                const hours = Math.floor(minutes / 60);
+                const mins = minutes % 60;
+                runtimeEl.textContent = `${hours}h ${mins}m`;
+            }
+
+            // Event wiring
+            function wireControls() {
+                const post = (url) => fetch(url, { method: 'POST' });
+                startBtn.addEventListener('click', () => post('/api/start'));
+                stopBtn.addEventListener('click', () => post('/api/stop'));
+                windBtn.addEventListener('click', () => post('/api/wind'));
+                shockBtn.addEventListener('click', () => post('/api/shock'));
+                serviceBtn.addEventListener('click', () => post('/api/service'));
+                resetBtn.addEventListener('click', () => post('/api/reset'));
+                movementToggle.addEventListener('click', () => {
+                    movementPanel.classList.toggle('hidden');
+                    movementToggle.textContent = movementPanel.classList.contains('hidden') ? 'Show Movement' : 'Hide Movement';
+                });
+            }
+
+            socket.on('connect', () => {
+                // connected
+            });
+
+            socket.on('watchStatus', (state) => {
+                // Expected shape matches server engine.state
+                setStatus(state?.isRunning);
+                timeEl.textContent = fmtTime(state?.now);
+                beatRateEl.textContent = (state?.beatRate ? state.beatRate.toLocaleString() : '28,800') + ' BPH';
+                accuracyEl.textContent = ((state?.accuracy ?? 0) >= 0 ? '+' : '') + (state?.accuracy ?? 0) + ' sec/day';
+                updatePower(state?.powerReserveSeconds ?? 48 * 3600);
+                updateComponents(state?.components ?? []);
+                updateStats(state);
+                drawWatch(state);
+            });
+
+            // Fallback redraw each second for smooth seconds hand when server is idle
+            setInterval(() => {
+                drawWatch({ now: new Date().toISOString() });
+                timeEl.textContent = fmtTime();
+            }, 1000);
+
+            document.addEventListener('DOMContentLoaded', () => {
+                wireControls();
+                drawWatch({ now: new Date().toISOString() });
+            });
+        })();
+    </script>
+</body>
+</html>

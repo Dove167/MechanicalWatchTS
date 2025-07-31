@@ -2,99 +2,82 @@ import express from 'express';
 import path from 'path';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
-import { MechanicalWatch } from './MechanicalWatch';
+import WatchEngine from './engine/WatchEngine';
+import { ComponentStatus } from './types/d.types';
 
 const app = express();
-const server = http.createServer(app); // Create HTTP server
-const io = new SocketIOServer(server); // Attach Socket.IO to HTTP server
+const server = http.createServer(app);
+const io = new SocketIOServer(server);
 const port = 3000;
 
 // Set up EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../views'));
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Create watch instance
-const watch = new MechanicalWatch();
+// Create watch engine instance
+const watchEngine = new WatchEngine();
 
 // Function to emit watch status
 const emitWatchStatus = () => {
-    const status = watch.getStatus();
-    io.emit('watchStatus', status); // Emit status to all connected clients
+    io.emit('watchStatus', watchEngine.state);
 };
 
 // Routes
 app.get('/', (req, res) => {
-    const status = watch.getStatus();
-    res.render('watch', {
-        watch: status,
-        title: 'Mechanical Watch Simulator'
+    res.render('index');
+});
+
+// API routes for watch controls
+app.post('/api/start', (req, res) => {
+    watchEngine.start();
+    emitWatchStatus();
+    res.json({ success: true });
+});
+
+app.post('/api/stop', (req, res) => {
+    watchEngine.stop();
+    emitWatchStatus();
+    res.json({ success: true });
+});
+
+app.post('/api/wind', (req, res) => {
+    watchEngine.wind();
+    emitWatchStatus();
+    res.json({ success: true });
+});
+
+app.post('/api/shock', (req, res) => {
+    watchEngine.shock();
+    emitWatchStatus();
+    res.json({ success: true });
+});
+
+app.post('/api/service', (req, res) => {
+    // Service all components
+    const state = watchEngine.state;
+    state.components.forEach((component) => {
+        component.health = 95 + Math.random() * 5;
+        component.status = state.isRunning ? ComponentStatus.RUNNING : ComponentStatus.STOPPED;
     });
-});
-
-app.post('/start', (req, res) => {
-    watch.start();
-    emitWatchStatus(); // Emit status after action
-    res.redirect('/');
-});
-
-app.post('/stop', (req, res) => {
-    watch.stop();
-    emitWatchStatus(); // Emit status after action
-    res.redirect('/');
-});
-
-app.post('/wind', (req, res) => {
-    watch.windWatch();
-    emitWatchStatus(); // Emit status after action
-    res.redirect('/');
-});
-
-app.post('/tick', (req, res) => {
-    watch.tick();
-    emitWatchStatus(); // Emit status after action
-    res.redirect('/');
-});
-
-app.post('/regulate-faster', (req, res) => {
-    watch.regulateWatch('faster');
     emitWatchStatus();
-    res.redirect('/');
+    res.json({ success: true });
 });
 
-app.post('/regulate-slower', (req, res) => {
-    watch.regulateWatch('slower');
+app.post('/api/reset', (req, res) => {
+    // In a real application, you might want to create a new engine instance
+    // For now, we'll just stop the watch
+    watchEngine.stop();
     emitWatchStatus();
-    res.redirect('/');
-});
-
-app.post('/shock', (req, res) => {
-    // Simulate a random shock force between 1000G and 10000G
-    const force = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000;
-    watch.simulateShock(force);
-    emitWatchStatus();
-    res.redirect('/');
-});
-
-// Route for statistics page
-app.get('/stats', (req, res) => {
-    const status = watch.getStatus();
-    res.render('stats', {
-        title: 'Watch Statistics',
-        watch: status
-    });
-});
-
-app.post('/reset-stats', (req, res) => {
-    // In a real application, you might reset internal stats here
-    console.log('Statistics reset');
     res.json({ success: true });
 });
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
     console.log('A user connected');
-    emitWatchStatus(); // Emit current status to new client on connection
+    emitWatchStatus(); // Emit current status to new client
 
     socket.on('disconnect', () => {
         console.log('User disconnected');
@@ -102,18 +85,11 @@ io.on('connection', (socket) => {
 });
 
 // Start server
-server.listen(port, () => { // Listen on the HTTP server, not the Express app
+server.listen(port, () => {
     console.log(`🕰️  Mechanical Watch Server running at http://localhost:${port}`);
     
-    // Start the watch automatically and simulate some ticks
-    watch.start();
-    emitWatchStatus(); // Initial emit
-
-    // Simulate ticking every second and emit updates
+    // Start emitting status updates periodically
     setInterval(() => {
-        if (watch.isRunning) {
-            watch.tick();
-            emitWatchStatus(); // Emit status after each tick
-        }
-    }, 1000);
+        emitWatchStatus();
+    }, 1000); // Emit status every second
 });
