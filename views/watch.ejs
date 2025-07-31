@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/watch-face.css">
+    <link rel="stylesheet" href="/css/movement-display.css">
+    <link rel="stylesheet" href="/css/power-reserve.css">
+</head>
+<body>
+    <div class="watch-container">
+        <h1><%= title %></h1>
+        
+        <!-- Patek Philippe Style Watch Face -->
+        <div class="patek-watch-container <%= watch.isRunning ? 'running' : 'stopped' %>">
+            <div class="patek-bezel"></div>
+            <div class="patek-dial">
+                <div class="patek-brand">PATEK PHILIPPE<br>GENÈVE</div>
+                <div class="patek-model">AUTOMATIC</div>
+                
+                <!-- Hour Markers -->
+                <div class="hour-marker hour-marker-12"></div>
+                <div class="hour-marker hour-marker-3"></div>
+                <div class="hour-marker hour-marker-6"></div>
+                <div class="hour-marker hour-marker-9"></div>
+                
+                <!-- Minute Markers -->
+                <% for(let i = 1; i <= 60; i++) { %>
+                    <% if(i % 5 !== 0) { %>
+                        <div class="minute-marker minute-marker-<%= i %>"></div>
+                    <% } %>
+                <% } %>
+                
+                <!-- Watch Hands -->
+                <div class="watch-hands">
+                    <div class="hour-hand" id="hour-hand"></div>
+                    <div class="minute-hand" id="minute-hand"></div>
+                    <div class="second-hand" id="second-hand"></div>
+                    <div class="center-dot"></div>
+                </div>
+                
+                <!-- Date Window -->
+                <div class="date-window" id="date-display"><%= new Date().getDate() %></div>
+            </div>
+            <div class="crown"></div>
+        </div>
+        
+        <!-- Movement Display -->
+        <div class="movement-container <%= watch.isRunning ? 'running' : 'stopped' %>">
+            <div class="movement-plate">
+                <div class="mainspring-barrel"></div>
+                <div class="center-wheel"></div>
+                <div class="third-wheel"></div>
+                <div class="fourth-wheel"></div>
+                <div class="escape-wheel"></div>
+                
+                <div class="balance-wheel-assembly">
+                    <div class="balance-wheel-main"></div>
+                    <div class="hairspring-coil"></div>
+                </div>
+                
+                <!-- Movement Jewels -->
+                <div class="movement-jewel jewel-balance-upper"></div>
+                <div class="movement-jewel jewel-balance-lower"></div>
+                <div class="movement-jewel jewel-escape-upper"></div>
+                <div class="movement-jewel jewel-escape-lower"></div>
+                <div class="movement-jewel jewel-fourth-upper"></div>
+                <div class="movement-jewel jewel-fourth-lower"></div>
+                <div class="movement-jewel jewel-third-upper"></div>
+                <div class="movement-jewel jewel-third-lower"></div>
+                <div class="movement-jewel jewel-center"></div>
+                <div class="movement-jewel jewel-mainspring"></div>
+            </div>
+        </div>
+
+        <!-- Power Reserve (existing) -->
+        <div class="power-reserve-container">
+            <div class="power-reserve-text">Power Reserve</div>
+            <div class="power-reserve-gauge"></div>
+            <div class="power-reserve-indicator"></div>
+            <div class="power-reserve-needle"></div>
+            <div class="power-reserve-labels">
+                <span>0h</span>
+                <span>21h</span>
+                <span>42h</span>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <form method="POST" action="/start" style="display: inline;">
+                <button type="submit">▶️ Start</button>
+            </form>
+            <form method="POST" action="/stop" style="display: inline;">
+                <button type="submit">⏸️ Stop</button>
+            </form>
+            <form method="POST" action="/wind" style="display: inline;">
+                <button type="submit">🔄 Wind</button>
+            </form>
+            <form method="POST" action="/tick" style="display: inline;">
+                <button type="submit">⏱️ Manual Tick</button>
+            </form>
+            <a href="/stats" style="text-decoration: none;">
+                <button type="button">📊 Statistics</button>
+            </a>
+        </div>
+        
+        <div class="advanced-controls">
+            <form method="POST" action="/regulate-faster" style="display: inline;">
+                <button type="submit">⚡ Faster</button>
+            </form>
+            <form method="POST" action="/regulate-slower" style="display: inline;">
+                <button type="submit">🐌 Slower</button>
+            </form>
+            <form method="POST" action="/shock" style="display: inline;">
+                <button type="submit">💥 Shock Test</button>
+            </form>
+        </div>
+
+        <div class="watch-info">
+            <p>💎 Jewels: <span id="jewel-count"><%= watch.jewelCount %></span>/15</p>
+            <p>🔋 Power Reserve: <span id="power-reserve"><%= watch.powerReserve %></span> hours</p>
+            <p>⏰ Current Time: <span id="current-time"><%= watch.time %></span></p>
+        </div>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        // Initialize minute marker positions
+        document.querySelectorAll('.minute-marker').forEach((marker, index) => {
+            const angle = (index + 1) * 6; // Each minute marker is 6 degrees apart
+            marker.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+        });
+
+        function updateWatchHands(timeString) {
+            const [hours, minutes, seconds] = timeString.split(':').map(Number);
+            
+            const hourAngle = (hours % 12) * 30 + (minutes * 0.5);
+            const minuteAngle = minutes * 6;
+            const secondAngle = seconds * 6;
+            
+            document.getElementById('hour-hand').style.transform = `rotate(${hourAngle}deg)`;
+            document.getElementById('minute-hand').style.transform = `rotate(${minuteAngle}deg)`;
+            document.getElementById('second-hand').style.transform = `rotate(${secondAngle}deg)`;
+        }
+
+        // Initialize hands
+        updateWatchHands('<%= watch.time %>');
+
+        socket.on('watchStatus', (status) => {
+            // Update time and hands
+            updateWatchHands(status.time);
+            document.getElementById('current-time').textContent = status.time;
+            
+            // Update watch state
+            const watchContainer = document.querySelector('.patek-watch-container');
+            const movementContainer = document.querySelector('.movement-container');
+            
+            watchContainer.className = `patek-watch-container ${status.isRunning ? 'running' : 'stopped'}`;
+            movementContainer.className = `movement-container ${status.isRunning ? 'running' : 'stopped'}`;
+            
+            // Update power reserve
+            const powerIndicator = document.querySelector('.power-reserve-indicator');
+            const powerNeedle = document.querySelector('.power-reserve-needle');
+            const powerPercentage = (status.powerReserve / 42) * 100;
+            powerIndicator.style.width = powerPercentage + '%';
+            powerNeedle.style.left = powerPercentage + '%';
+            
+            // Update info displays
+            document.getElementById('jewel-count').textContent = status.jewelCount;
+            document.getElementById('power-reserve').textContent = status.powerReserve;
+            
+            // Update date
+            document.getElementById('date-display').textContent = new Date().getDate();
+        });
+    </script>
+</body>
+</html>

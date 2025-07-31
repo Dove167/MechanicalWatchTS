@@ -1,0 +1,62 @@
+/* public/css/power-reserve.css */
+.power-reserve-container {
+    position: relative;
+    width: 150px;
+    height: 80px;
+    margin: 20px auto;
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: 2px solid #ffff00;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.power-reserve-gauge {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #ff0000 0%, #ffff00 50%, #00ff00 100%);
+    opacity: 0.3;
+}
+
+.power-reserve-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #ff4444 0%, #ffff44 50%, #44ff44 100%);
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+}
+
+.power-reserve-needle {
+    position: absolute;
+    top: 50%;
+    width: 2px;
+    height: 60%;
+    background: #ffff00;
+    transform: translateY(-50%);
+    transition: left 0.5s ease;
+    box-shadow: 0 0 5px #ffff00;
+}
+
+.power-reserve-labels {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8px;
+    color: #ffff00;
+    text-shadow: 0 0 3px #ffff00;
+}
+
+.power-reserve-text {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: #ffff00;
+    text-shadow: 0 0 3px #ffff00;
+}

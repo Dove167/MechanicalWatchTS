@@ -1,0 +1,301 @@
+/* public/css/movement-display.css */
+.movement-container {
+    position: relative;
+    width: 350px;
+    height: 350px;
+    margin: 20px auto;
+    background: radial-gradient(circle, #2a2a2a 0%, #1a1a1a 100%);
+    border: 3px solid #666;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 
+        inset 0 0 30px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.movement-plate {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    background: linear-gradient(135deg, #444 0%, #333 50%, #222 100%);
+    border-radius: 50%;
+    border: 2px solid #555;
+}
+
+/* Mainspring Barrel */
+.mainspring-barrel {
+    position: absolute;
+    top: 60%;
+    left: 25%;
+    width: 80px;
+    height: 80px;
+    background: conic-gradient(from 0deg, #555 0deg, #777 60deg, #555 120deg, #777 180deg, #555 240deg, #777 300deg);
+    border: 2px solid #888;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: mainspring-rotation 8s linear infinite;
+}
+
+.mainspring-barrel::after {
+    content: 'MAIN';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #aaa;
+    font-size: 8px;
+    font-weight: bold;
+}
+
+/* Center Wheel */
+.center-wheel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    background: conic-gradient(from 0deg, #666 0deg, #888 45deg, #666 90deg, #888 135deg, #666 180deg, #888 225deg, #666 270deg, #888 315deg);
+    border: 2px solid #999;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: center-wheel-rotation 60s linear infinite;
+    z-index: 5;
+}
+
+.center-wheel::after {
+    content: 'CTR';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #bbb;
+    font-size: 7px;
+    font-weight: bold;
+}
+
+/* Third Wheel */
+.third-wheel {
+    position: absolute;
+    top: 30%;
+    left: 70%;
+    width: 45px;
+    height: 45px;
+    background: conic-gradient(from 0deg, #555 0deg, #777 30deg, #555 60deg, #777 90deg, #555 120deg, #777 150deg, #555 180deg, #777 210deg, #555 240deg, #777 270deg, #555 300deg, #777 330deg);
+    border: 2px solid #888;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: third-wheel-rotation 7.5s linear infinite;
+    z-index: 4;
+}
+
+.third-wheel::after {
+    content: '3RD';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #aaa;
+    font-size: 6px;
+    font-weight: bold;
+}
+
+/* Fourth Wheel */
+.fourth-wheel {
+    position: absolute;
+    top: 65%;
+    left: 75%;
+    width: 35px;
+    height: 35px;
+    background: conic-gradient(from 0deg, #666 0deg, #888 20deg, #666 40deg, #888 60deg, #666 80deg, #888 100deg, #666 120deg, #888 140deg, #666 160deg, #888 180deg, #666 200deg, #888 220deg, #666 240deg, #888 260deg, #666 280deg, #888 300deg, #666 320deg, #888 340deg);
+    border: 2px solid #999;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: fourth-wheel-rotation 1s linear infinite;
+    z-index: 3;
+}
+
+.fourth-wheel::after {
+    content: '4TH';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #bbb;
+    font-size: 5px;
+    font-weight: bold;
+}
+
+/* Escape Wheel */
+.escape-wheel {
+    position: absolute;
+    top: 25%;
+    left: 30%;
+    width: 30px;
+    height: 30px;
+    background: conic-gradient(from 0deg, #777 0deg, #999 24deg, #777 48deg, #999 72deg, #777 96deg, #999 120deg, #777 144deg, #999 168deg, #777 192deg, #999 216deg, #777 240deg, #999 264deg, #777 288deg, #999 312deg, #777 336deg);
+    border: 2px solid #aaa;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: escape-wheel-rotation 0.5s steps(15) infinite;
+    z-index: 2;
+}
+
+.escape-wheel::after {
+    content: 'ESC';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ccc;
+    font-size: 4px;
+    font-weight: bold;
+}
+
+/* Balance Wheel */
+.balance-wheel-assembly {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    width: 70px;
+    height: 70px;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+}
+
+.balance-wheel-main {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid #00ffff;
+    border-radius: 50%;
+    background: none;
+    animation: balance-oscillation 0.25s ease-in-out infinite alternate;
+}
+
+.balance-wheel-main::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: #00ffff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 8px #00ffff;
+}
+
+.hairspring-coil {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #00ffff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.6;
+    animation: hairspring-tension 0.25s ease-in-out infinite alternate;
+}
+
+.hairspring-coil::before,
+.hairspring-coil::after {
+    content: '';
+    position: absolute;
+    border: 1px solid #00ffff;
+    border-radius: 50%;
+    opacity: 0.4;
+}
+
+.hairspring-coil::before {
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+}
+
+.hairspring-coil::after {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+}
+
+/* Jewels */
+.movement-jewel {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle at 30% 30%, #ff6b6b, #cc0000);
+    border: 1px solid #ff9999;
+    border-radius: 50%;
+    box-shadow: 0 0 4px #ff6b6b;
+    animation: jewel-sparkle 2s ease-in-out infinite;
+}
+
+/* Jewel Positions */
+.jewel-balance-upper { top: 15%; left: 45%; }
+.jewel-balance-lower { top: 25%; left: 55%; }
+.jewel-escape-upper { top: 20%; left: 25%; }
+.jewel-escape-lower { top: 30%; left: 35%; }
+.jewel-fourth-upper { top: 60%; left: 70%; }
+.jewel-fourth-lower { top: 70%; left: 80%; }
+.jewel-third-upper { top: 25%; left: 65%; }
+.jewel-third-lower { top: 35%; left: 75%; }
+.jewel-center { top: 45%; left: 45%; }
+.jewel-mainspring { top: 55%; left: 20%; }
+
+/* Animations */
+@keyframes mainspring-rotation {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes center-wheel-rotation {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes third-wheel-rotation {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+@keyframes fourth-wheel-rotation {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes escape-wheel-rotation {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(24deg); }
+}
+
+@keyframes balance-oscillation {
+    0% { transform: translate(-50%, -50%) rotate(-20deg); }
+    100% { transform: translate(-50%, -50%) rotate(20deg); }
+}
+
+@keyframes hairspring-tension {
+    0% { transform: translate(-50%, -50%) scale(0.9); }
+    100% { transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes jewel-sparkle {
+    0%, 100% { box-shadow: 0 0 4px #ff6b6b; }
+    50% { box-shadow: 0 0 12px #ff6b6b, 0 0 20px #ff3333; }
+}
+
+/* Stopped State */
+.movement-container.stopped .mainspring-barrel,
+.movement-container.stopped .center-wheel,
+.movement-container.stopped .third-wheel,
+.movement-container.stopped .fourth-wheel,
+.movement-container.stopped .escape-wheel,
+.movement-container.stopped .balance-wheel-main,
+.movement-container.stopped .hairspring-coil {
+    animation-play-state: paused;
+    opacity: 0.5;
+}

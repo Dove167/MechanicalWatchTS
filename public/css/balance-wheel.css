@@ -1,0 +1,93 @@
+/* public/css/balance-wheel.css */
+.balance-wheel-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+    background: radial-gradient(circle, #2a2a2a 0%, #1a1a1a 100%);
+    border: 2px solid #00ffff;
+    border-radius: 50%;
+}
+
+.balance-wheel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    transform: translate(-50%, -50%);
+    border: 3px solid #00ffff;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #444 0deg, #666 90deg, #444 180deg, #666 270deg);
+    animation: balance-oscillation 0.5s ease-in-out infinite alternate;
+}
+
+.balance-wheel::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background: #00ffff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px #00ffff;
+}
+
+.hairspring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    transform: translate(-50%, -50%);
+    border: 1px solid #00ffff;
+    border-radius: 50%;
+    background: none;
+    opacity: 0.6;
+    animation: hairspring-tension 0.5s ease-in-out infinite alternate;
+}
+
+.hairspring::before,
+.hairspring::after {
+    content: '';
+    position: absolute;
+    border: 1px solid #00ffff;
+    border-radius: 50%;
+    opacity: 0.4;
+}
+
+.hairspring::before {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+}
+
+.hairspring::after {
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+}
+
+@keyframes balance-oscillation {
+    0% { transform: translate(-50%, -50%) rotate(-15deg); }
+    100% { transform: translate(-50%, -50%) rotate(15deg); }
+}
+
+@keyframes hairspring-tension {
+    0% { transform: translate(-50%, -50%) scale(0.9); }
+    100% { transform: translate(-50%, -50%) scale(1.1); }
+}
+
+.balance-wheel.stopped {
+    animation-play-state: paused;
+    opacity: 0.5;
+}
+
+.hairspring.stopped {
+    animation-play-state: paused;
+    opacity: 0.3;
+}

@@ -1,0 +1,52 @@
+body { 
+    font-family: 'Courier New', monospace; 
+    background: #1a1a1a; 
+    color: #00ff00; 
+    padding: 20px; 
+}
+.watch-container { 
+    max-width: 800px; 
+    margin: 0 auto; 
+    border: 2px solid #00ff00; 
+    padding: 20px; 
+    border-radius: 10px; 
+}
+.watch-face { 
+    text-align: center; 
+    font-size: 2em; 
+    margin: 20px 0; 
+    padding: 20px; 
+    border: 1px solid #00ff00; 
+    border-radius: 50%; 
+    width: 200px; 
+    height: 200px; 
+    line-height: 200px; 
+    margin: 20px auto; 
+}
+.controls { 
+    text-align: center; 
+    margin: 20px 0; 
+}
+button { 
+    background: #003300; 
+    color: #00ff00; 
+    border: 1px solid #00ff00; 
+    padding: 10px 20px; 
+    margin: 5px; 
+    cursor: pointer; 
+}
+button:hover { 
+    background: #00ff00; 
+    color: #000; 
+}
+.status { 
+    margin: 20px 0; 
+}
+.component { 
+    margin: 5px 0; 
+    padding: 5px; 
+    border-left: 3px solid #00ff00; 
+    padding-left: 10px; 
+}
+.running { color: #00ff00; }
+.stopped { color: #ff0000; }

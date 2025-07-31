@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Statistics - <%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/stats.css">
+</head>
+<body>
+    <div class="stats-container">
+        <h1>📊 Mechanical Watch Statistics</h1>
+        
+        <div class="stats-grid">
+            <!-- Movement Statistics -->
+            <div class="stats-card">
+                <h3>⚙️ Movement Data</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Beat Rate:</span>
+                    <span class="stat-value">28,800 BPH</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Frequency:</span>
+                    <span class="stat-value">4 Hz</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Amplitude:</span>
+                    <span class="stat-value">280°</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Beat Error:</span>
+                    <span class="stat-value">0.2ms</span>
+                </div>
+            </div>
+
+            <!-- Power Statistics -->
+            <div class="stats-card">
+                <h3>🔋 Power System</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Power Reserve:</span>
+                    <span class="stat-value" id="stats-power-reserve"><%= watch.powerReserve %> hours</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Mainspring Tension:</span>
+                    <span class="stat-value"><%= Math.floor((watch.powerReserve / 42) * 100) %>%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Energy Efficiency:</span>
+                    <span class="stat-value">92%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Winding Status:</span>
+                    <span class="stat-value <%= watch.powerReserve > 30 ? 'good' : 'warning' %>">
+                        <%= watch.powerReserve > 30 ? 'Full Wind' : 'Needs Winding' %>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Component Health -->
+            <div class="stats-card">
+                <h3>💎 Component Health</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Jewel Count:</span>
+                    <span class="stat-value" id="stats-jewel-count"><%= watch.jewelCount %>/15</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Jewel Condition:</span>
+                    <span class="stat-value <%= watch.jewelCount >= 13 ? 'excellent' : watch.jewelCount >= 10 ? 'good' : 'warning' %>">
+                        <%= watch.jewelCount >= 13 ? 'Excellent' : watch.jewelCount >= 10 ? 'Good' : 'Needs Service' %>
+                    </span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Gear Train:</span>
+                    <span class="stat-value <%= watch.isRunning ? 'running' : 'stopped' %>">
+                        <%= watch.isRunning ? 'Operating' : 'Stopped' %>
+                    </span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Escapement:</span>
+                    <span class="stat-value excellent">Perfect</span>
+                </div>
+            </div>
+
+            <!-- Timing Performance -->
+            <div class="stats-card">
+                <h3>⏱️ Timing Performance</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Daily Rate:</span>
+                    <span class="stat-value">+2 sec/day</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Position Error:</span>
+                    <span class="stat-value">±5 sec</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Temperature Stability:</span>
+                    <span class="stat-value excellent">Excellent</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Regulation:</span>
+                    <span class="stat-value good">Fine Adjusted</span>
+                </div>
+            </div>
+
+            <!-- Environmental Data -->
+            <div class="stats-card">
+                <h3>🌡️ Environmental</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Temperature:</span>
+                    <span class="stat-value">23°C</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Humidity:</span>
+                    <span class="stat-value">45%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Magnetic Field:</span>
+                    <span class="stat-value good">Normal</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Shock Resistance:</span>
+                    <span class="stat-value excellent">5000 G</span>
+                </div>
+            </div>
+
+            <!-- Service Information -->
+            <div class="stats-card">
+                <h3>🔧 Service Data</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Last Service:</span>
+                    <span class="stat-value">6 months ago</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Next Service:</span>
+                    <span class="stat-value">18 months</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Oil Condition:</span>
+                    <span class="stat-value good">Good</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Wear Level:</span>
+                    <span class="stat-value excellent">Minimal</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Component Details -->
+        <div class="component-details">
+            <h3>🔍 Component Details</h3>
+            <div class="components-grid">
+                <% watch.components.forEach((component, index) => { %>
+                    <div class="component-card <%= component.includes('Working') ? 'working' : 'stopped' %>">
+                        <div class="component-name"><%= component.split(':')[0] %></div>
+                        <div class="component-status"><%= component.split(':')[1] || 'Working' %></div>
+                        <div class="component-health">
+                            <div class="health-bar">
+                                <div class="health-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <!-- Performance Charts -->
+        <div class="charts-section">
+            <h3>📈 Performance Charts</h3>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h4>Power Reserve Over Time</h4>
+                    <div class="chart-container">
+                        <canvas id="powerChart" width="300" height="150"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h4>Timing Accuracy</h4>
+                    <div class="chart-container">
+                        <canvas id="timingChart" width="300" height="150"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <a href="/" style="text-decoration: none;">
+                <button type="button">🏠 Back to Watch</button>
+            </a>
+            <button type="button" onclick="exportStats()">📊 Export Data</button>
+            <button type="button" onclick="resetStats()">🔄 Reset Statistics</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        // Simple chart drawing
+        function drawPowerChart() {
+            const canvas = document.getElementById('powerChart');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 2;
+            
+            // Draw power curve
+            ctx.beginPath();
+            const points = [];
+            for (let i = 0; i < 24; i++) {
+                const x = (i / 24) * canvas.width;
+                const powerLevel = Math.max(0, 42 - (i * 1.75) + Math.sin(i * 0.5) * 2);
+                const y = canvas.height - (powerLevel / 42) * canvas.height;
+                points.push({x, y});
+            }
+            
+            ctx.moveTo(points[0].x, points[0].y);
+            points.forEach(point => ctx.lineTo(point.x, point.y));
+            ctx.stroke();
+            
+            // Draw grid
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = (i / 4) * canvas.height;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
+
+        function drawTimingChart() {
+            const canvas = document.getElementById('timingChart');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#ffff00';
+            ctx.lineWidth = 2;
+            
+            // Draw timing accuracy
+            ctx.beginPath();
+            const centerY = canvas.height / 2;
+            for (let i = 0; i < canvas.width; i++) {
+                const x = i;
+                const deviation = Math.sin(i * 0.1) * 10 + Math.random() * 5 - 2.5;
+                const y = centerY + deviation;
+                
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            
+            // Draw center line
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(canvas.width, centerY);
+            ctx.stroke();
+        }
+
+        // Initialize charts
+        drawPowerChart();
+        drawTimingChart();
+
+        // Update stats in real-time
+        socket.on('watchStatus', (status) => {
+            document.getElementById('stats-power-reserve').textContent = status.powerReserve + ' hours';
+            document.getElementById('stats-jewel-count').textContent = status.jewelCount + '/15';
+            
+            // Update health bars
+            document.querySelectorAll('.component-card').forEach((card, index) => {
+                const healthFill = card.querySelector('.health-fill');
+                if (healthFill) {
+                    healthFill.style.width = `${85 + Math.random() * 15}%`; // Random health for now
+                }
+            });
+
+            // Redraw charts periodically
+            if (Math.random() < 0.1) {
+                drawPowerChart();
+                drawTimingChart();
+            }
+        });
+
+        function exportStats() {
+            const statsData = {
+                timestamp: new Date().toISOString(),
+                powerReserve: window.watchData.powerReserve,
+                jewelCount: window.watchData.jewelCount,
+                isRunning: window.watchData.isRunning,
+                components: window.watchData.components
+            };
+            
+            const dataStr = JSON.stringify(statsData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'watch-stats-' + new Date().toISOString().split('T')[0] + '.json';
+            link.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        function resetStats() {
+            if (confirm('Are you sure you want to reset all statistics?')) {
+                fetch('/reset-stats', { method: 'POST' })
+                    .then(() => location.reload());
+            }
+        }
+    </script>
+</body>
+</html>

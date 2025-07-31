@@ -1,0 +1,153 @@
+/* public/css/gears.css */
+.gear-system {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    margin: 20px auto;
+    background: radial-gradient(circle, #2a2a2a 0%, #1a1a1a 100%);
+    border: 3px solid #00ff00;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.gear {
+    position: absolute;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #444 0deg, #666 30deg, #444 60deg, #666 90deg, #444 120deg, #666 150deg, #444 180deg, #666 210deg, #444 240deg, #666 270deg, #444 300deg, #666 330deg);
+    border: 2px solid #00ff00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.gear::before {
+    content: '';
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg, transparent 0deg, transparent 10deg, #00ff00 11deg, #00ff00 12deg);
+    animation: inherit;
+}
+
+.gear::after {
+    content: '';
+    position: absolute;
+    width: 20%;
+    height: 20%;
+    background: #333;
+    border: 1px solid #00ff00;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+/* Individual Gear Positions and Sizes */
+.center-wheel {
+    width: 80px;
+    height: 80px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: rotate-clockwise 60s linear infinite;
+    z-index: 5;
+}
+
+.third-wheel {
+    width: 60px;
+    height: 60px;
+    top: 25%;
+    left: 65%;
+    transform: translate(-50%, -50%);
+    animation: rotate-counterclockwise 7.5s linear infinite;
+    z-index: 4;
+}
+
+.fourth-wheel {
+    width: 50px;
+    height: 50px;
+    top: 65%;
+    left: 75%;
+    transform: translate(-50%, -50%);
+    animation: rotate-clockwise 1s linear infinite;
+    z-index: 3;
+}
+
+.escape-wheel {
+    width: 40px;
+    height: 40px;
+    top: 30%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    animation: rotate-escapement 0.5s steps(15) infinite;
+    z-index: 2;
+}
+
+.mainspring-barrel {
+    width: 100px;
+    height: 100px;
+    top: 70%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    animation: rotate-clockwise 480s linear infinite;
+    background: conic-gradient(from 0deg, #666 0deg, #888 50deg, #666 100deg, #888 150deg, #666 200deg, #888 250deg, #666 300deg, #888 350deg);
+    z-index: 1;
+}
+
+/* Animations */
+@keyframes rotate-clockwise {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes rotate-counterclockwise {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+@keyframes rotate-escapement {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(24deg); }
+}
+
+/* Gear Teeth Effect */
+.gear.running::before {
+    box-shadow: 0 0 10px #00ff00;
+}
+
+.gear.stopped {
+    animation-play-state: paused !important;
+    opacity: 0.5;
+}
+
+/* Gear Connections (Visual Lines) */
+.gear-connection {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00ff00, transparent);
+    z-index: 0;
+    opacity: 0.3;
+}
+
+.connection-1 {
+    width: 60px;
+    top: 50%;
+    left: 55%;
+    transform: rotate(45deg);
+}
+
+.connection-2 {
+    width: 40px;
+    top: 45%;
+    left: 70%;
+    transform: rotate(-30deg);
+}
+
+.connection-3 {
+    width: 80px;
+    top: 35%;
+    left: 35%;
+    transform: rotate(-45deg);
+}
